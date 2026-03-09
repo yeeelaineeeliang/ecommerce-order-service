@@ -1,1 +1,1 @@
- Jenkinsfile for ecommerce-product-service
+Jenkinsfile for ecommerce-order-service

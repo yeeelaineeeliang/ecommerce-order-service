@@ -1,1 +1,1 @@
-Dockerfile for ecommerce-product-service
+Dockerfile for ecommerce-order-service
