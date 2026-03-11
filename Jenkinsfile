@@ -35,15 +35,21 @@ pipeline {
         }
 
         stage('Build') {
-            steps { buildStage(service: SERVICE_NAME) }
+            steps {
+                buildStage(service: SERVICE_NAME)
+            }
         }
 
         stage('Test') {
-            steps { testStage(service: SERVICE_NAME) }
+            steps {
+                testStage(service: SERVICE_NAME)
+            }
         }
 
         stage('Security Scan - IaC (Checkov)') {
-            steps { securityScanStage(service: SERVICE_NAME) }
+            steps {
+                securityScanStage(service: SERVICE_NAME)
+            }
         }
 
         stage('Docker Build & Push') {
@@ -58,17 +64,23 @@ pipeline {
 
         stage('Security Scan - Image (Trivy)') {
             when { not { changeRequest() } }
-            steps { securityScanStage(service: SERVICE_NAME, image: FULL_IMAGE) }
+            steps {
+                securityScanStage(service: SERVICE_NAME, image: FULL_IMAGE)
+            }
         }
 
         stage('Deploy to Dev') {
             when { branch 'develop' }
-            steps { k8sDeploy(service: SERVICE_NAME, namespace: 'dev', image: FULL_IMAGE) }
+            steps {
+                k8sDeploy(service: SERVICE_NAME, namespace: 'dev', image: FULL_IMAGE)
+            }
         }
 
         stage('Deploy to Staging') {
             when { expression { env.BRANCH_NAME ==~ /release\/.*/ } }
-            steps { k8sDeploy(service: SERVICE_NAME, namespace: 'staging', image: FULL_IMAGE) }
+            steps {
+                k8sDeploy(service: SERVICE_NAME, namespace: 'staging', image: FULL_IMAGE)
+            }
         }
 
         stage('Approval Gate — Production') {
@@ -84,12 +96,16 @@ pipeline {
 
         stage('Deploy to Production') {
             when { branch 'main' }
-            steps { k8sDeploy(service: SERVICE_NAME, namespace: 'prod', image: FULL_IMAGE) }
+            steps {
+                k8sDeploy(service: SERVICE_NAME, namespace: 'prod', image: FULL_IMAGE)
+            }
         }
 
         stage('Update Monitoring Stack') {
             when { branch 'main' }
-            steps { monitoringDeploy(namespace: 'monitoring') }
+            steps {
+                monitoringDeploy(namespace: 'monitoring')
+            }
         }
 
     }
